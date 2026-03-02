@@ -76,11 +76,12 @@ function makeBaseUrl(req) {
 
 // create guest
 router.post('/', async (req, res) => {
-  const { name, email } = req.body;
+  const { name, phone } = req.body;
   if (!name) return res.status(400).send('name required');
+  if (!phone) return res.status(400).send('phone required');
 
   const id = nanoid();
-  const guest = { id, name, email: email || '', checkedIn: false };
+  const guest = { id, name, phone, checkedIn: false };
   db.data.guests.push(guest);
   try {
     await db.write();
@@ -118,6 +119,45 @@ router.get('/:id/checkin', async (req, res) => {
   guest.checkedIn = true;
   await db.write();
   res.send(`Thanks ${guest.name}, you are checked in!`);
+});
+
+// get the full check-in URL for a guest (for WhatsApp etc)
+router.get('/:id/qr-url', async (req, res) => {
+  await db.read();
+  const guest = db.data.guests.find(g => g.id === req.params.id);
+  if (!guest) return res.status(404).json({ error: 'not found' });
+  const url = `${makeBaseUrl(req)}/guests/${guest.id}/checkin`;
+  res.json({ url });
+});
+
+// reset check-in status
+router.post('/:id/reset', async (req, res) => {
+  await db.read();
+  const guest = db.data.guests.find(g => g.id === req.params.id);
+  if (!guest) return res.status(404).send('not found');
+  guest.checkedIn = false;
+  try {
+    await db.write();
+  } catch (err) {
+    console.error('write failed', err);
+    return res.status(503).json({ error: 'database write failed' });
+  }
+  res.json({ status: 'reset', guest });
+});
+
+// delete a guest
+router.delete('/:id', async (req, res) => {
+  await db.read();
+  const idx = db.data.guests.findIndex(g => g.id === req.params.id);
+  if (idx === -1) return res.status(404).send('not found');
+  const removed = db.data.guests.splice(idx, 1)[0];
+  try {
+    await db.write();
+  } catch (err) {
+    console.error('write failed', err);
+    return res.status(503).json({ error: 'database write failed' });
+  }
+  res.json({ status: 'deleted', guest: removed });
 });
 
 export default router;

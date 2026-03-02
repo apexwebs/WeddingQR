@@ -6,12 +6,21 @@ Simple Node.js/Express app that allows:
 - Scanning QR codes using a phone/tablet camera
 - Marking guests as checked in
 
+## Features
+
+- ✅ Add guests with full name and WhatsApp phone number (Kenya +254 pre-filled)
+- ✅ Auto-generate QR codes pointing to personal check-in URLs
+- ✅ Scan QR codes to check guests in instantly
+- ✅ Send guest details + QR code to WhatsApp directly
+- ✅ Reset a guest's check-in status (mark as pending again)
+- ✅ Delete guest records
+- ✅ Multi-select guests for bulk operations (reset/delete multiple at once)
+
 ## Setup
 
 ```bash
-cd e:\weddingQR
+cd weddingQR
 npm install
-# Node 14+ is required since the project uses ES modules (`"type": "module"` in package.json).
 npm run dev        # or npm start
 ```
 
@@ -19,9 +28,22 @@ App listens on port 3000 by default. Visit `http://localhost:3000`.
 
 ## Workflow
 
-1. Add a guest via **Manage Guests** page. A QR code URL is returned in the console and the guest list updates.
-2. Print or share the QR code URL (either open the `/guests/:id/qr` link or the data URL).
-3. At the venue, open **Scan QR Code** page on a phone/tablet and scan. The app will call the checkin URL and display a confirmation message.
+1. **Add guests** via **Manage Guests** page → Full Name + WhatsApp Phone. Code defaults to +254 (Kenya); adjust the number as needed.
+2. **View QR Code** or **Send to WhatsApp** to share the check-in link.
+3. At venue, **Scan QR Code** from a phone/tablet to check guests in.
+4. **Reset Status** to mark a guest as pending again if needed.
+5. **Delete Guests** to remove records.
+6. **Multi-select** multiple guests using checkboxes for bulk reset or delete.
+
+## API Endpoints
+
+- `GET /guests` — List all guests
+- `POST /guests` — Create new guest (`{ name, phone }`)
+- `GET /guests/:id/qr` — PNG image of QR code
+- `GET /guests/:id/qr-url` — JSON with check-in URL (used by WhatsApp button)
+- `GET /guests/:id/checkin` — Mark guest as checked in
+- `POST /guests/:id/reset` — Reset check-in status to pending
+- `DELETE /guests/:id` — Delete a guest record
 
 ## Deployment
 
