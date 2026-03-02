@@ -152,8 +152,9 @@
 
     // individual actions
     async function sendWhatsApp(id, name, phone) {
-      const url = await fetch(`/guests/${id}/qr-url`).then(r => r.json()).then(d => d.url);
-      const message = encodeURIComponent(`Hi ${name}! 👋 Here is your wedding check-in QR code:\n${url}`);
+      // open a mobile-friendly page showing the QR image
+      const viewUrl = `${location.origin}/guests/${id}/view`;
+      const message = encodeURIComponent(`Hi ${name}! 👋 Open your check-in QR here:\n${viewUrl}`);
       const whatsappUrl = `https://wa.me/254${phone}?text=${message}`;
       window.open(whatsappUrl, '_blank');
     }
