@@ -4,6 +4,9 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const app = express();
+// enable trust proxy so req.protocol reflects the original protocol
+// when running behind Vercel or another proxy
+app.set('trust proxy', 1);
 
 // compute __dirname equivalent in ESM
 const __filename = fileURLToPath(import.meta.url);

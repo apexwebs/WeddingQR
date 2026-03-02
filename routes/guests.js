@@ -66,7 +66,12 @@ function makeBaseUrl(req) {
     // strip trailing slash if present
     return process.env.BASE_URL.replace(/\/+$/, '');
   }
-  return `${req.protocol}://${req.get('host')}`;
+  let protocol = req.protocol;
+  // when in production we prefer https to avoid mixed-content issues
+  if (process.env.NODE_ENV === 'production' && protocol === 'http') {
+    protocol = 'https';
+  }
+  return `${protocol}://${req.get('host')}`;
 }
 
 // create guest

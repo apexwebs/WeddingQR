@@ -44,7 +44,9 @@ Unless you regenerate them from the deployed site, any QR codes created during l
 
 ### Scanning behavior
 
-The scanner page now echoes the scanned URL beneath error messages, so you can quickly tell whether it’s attempting to contact the right domain. A typical successful scan will show the “Thanks … you are checked in!” text; if you see a localhost URL or another unfamiliar host, delete the guest and add them again from the live server.
+The scanner page now echoes the scanned URL beneath error messages, so you can quickly tell whether it’s attempting to contact the right domain. A common pitfall on HTTPS deployments is **mixed content**: if your QR code URL starts with `http://` but the scan page is loaded via `https://`, the browser will block the fetch and you'll see `TypeError: Failed to fetch`. To avoid this, the server now forces `https` on production (and respects a `BASE_URL` override). 
+
+A typical successful scan will show the “Thanks … you are checked in!” text; if you see a localhost URL or another unfamiliar host, delete the guest and add them again from the live server.
 
 ### Persistence on deployments
 
