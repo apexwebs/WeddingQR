@@ -1,6 +1,13 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
 const app = express();
+
+// compute __dirname equivalent in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // middleware
 app.use(express.json());
@@ -10,7 +17,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // routes
-const guestRoutes = require('./routes/guests');
+import guestRoutes from './routes/guests.js';
 app.use('/guests', guestRoutes);
 
 app.get('/', (req, res) => {

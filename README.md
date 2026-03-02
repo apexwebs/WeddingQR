@@ -11,6 +11,7 @@ Simple Node.js/Express app that allows:
 ```bash
 cd e:\weddingQR
 npm install
+# Node 14+ is required since the project uses ES modules (`"type": "module"` in package.json).
 npm run dev        # or npm start
 ```
 
@@ -24,4 +25,4 @@ App listens on port 3000 by default. Visit `http://localhost:3000`.
 
 ## Deployment
 
-Use any Node hosting provider or serve via PM2/Nginx. Ensure the base URL in the QR codes matches the publicly reachable address when deployed.
+Use any Node hosting provider or serve via PM2/Nginx. The app is now using ES modules, which matches Vercel's defaults; you should no longer see `ERR_REQUIRE_ESM` errors when deploying. Ensure the base URL in the QR codes matches the publicly reachable address when deployed.

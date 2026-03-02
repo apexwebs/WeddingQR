@@ -2,6 +2,7 @@
   "name": "wedding-qr-checkin",
   "version": "1.0.0",
   "description": "Simple guest check-in app with QR codes",
+  "type": "module",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
