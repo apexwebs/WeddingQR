@@ -7,14 +7,16 @@ const resultDiv = document.getElementById('result');
 const scanner = new QrScanner(video, result => {
   console.log('decoded:', result);
   resultDiv.textContent = result;
-  // optionally send fetch to server to mark checkin automatically
+
+  // try to fetch the URL returned by the QR scanner
   fetch(result)
     .then(r => r.text())
     .then(text => {
       resultDiv.textContent = text;
     })
     .catch(err => {
-      resultDiv.textContent = 'error: ' + err;
+      // display detailed message to help debugging
+      resultDiv.innerHTML = `error: ${err} <br/><small>scanned URL: ${result}</small>`;
     });
   scanner.stop();
 });
